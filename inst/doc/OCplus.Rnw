@@ -1,0 +1,268 @@
+\documentclass[10pt]{article}
+
+%\VignetteIndexEntry{OCplus Introduction}
+%\VignetteDepends{akima, multtest}
+%\VignetteKeywords{microarray, differential expression, false discovery rate}
+%\VignettePackage{OCplus}
+
+\usepackage[authoryear,round]{natbib}
+
+%% avoids the [T1] for Sweave.sty
+%% NB, the follwoing commented \usepackage is necessary!
+%% instead of \usepackage{Sweave}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\setkeys{Gin}{width=0.8\textwidth}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontshape=sl}
+\newenvironment{Schunk}{}{}
+%% End Sweave.sty
+
+%% The options
+\SweaveOpts{eps=FALSE, prefix.string=pix/OCplus} 
+
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\texttt{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+
+\begin{document}
+
+\title{Introduction to the OCplus package}
+\author{Alexander Ploner\\
+Medical Epidemiology \& Biostatistics\\
+Karolinska Institutet, Stockholm\\
+email: \texttt{alexander.ploner@ki.se}}
+
+\maketitle
+
+%% Reduce output line width
+<<echo=FALSE, results=hide>>=
+options(width=65)
+@
+
+\section{Overview}
+
+The \Rpackage{OCplus} package offers a variety of tools for designing and analyzing gene expression microarray experiments. The common underlying statistical concept is the use of the false discovery rate (fdr) to identify differentially expressed (DE) genes. 
+
+A commonly underappreciated fact is that in a microarray setting, magical thresholds like 0.05 or 0.01 make even less sense for the fdr than they do for the traditional p-values. The trade-off between fdr and the ability to detect relevant genes can be made much more explicit than the classical trade-off between p-value and statistical power. A central idea of \Rpackage{OCplus} is to allow the user to make up her mind about the trade-off appropriate for her specific situation, based on the operating characteristics of her experimental design or data set (hence the name).
+
+The main functionality of \Rpackage{OCplus} falls into three categories, listed below with their most important functions:
+\begin{enumerate}
+\item Sample size assessment: \Rfunction{TOC}, \Rfunction{samplesize}
+\item Data analysis: \Rfunction{EOC}, \Rfunction{fdr1d}, \Rfunction{fdr2d}
+\item Estimation of the proportion of non-DE genes: \Rfunction{tMixture}
+\end{enumerate}
+This short introduction explains the underlying model and demonstrates the main functionality in each category; in-depth descriptions can be found in the individual vignettes.
+
+\section{Installation}
+
+You need the package \Rpackage{akima}, available from CRAN. In order to run \Rfunction{EOC}, you also need the package \Rpackage{multtest} from Bioconductor.
+<<>>=
+library(OCplus)
+@
+
+\section{Sample size calculations}
+
+\subsection{\Rfunction{samplesize}}
+
+This function allows the user to choose an appropriate number of microarray chips per group for an assumed proportion of regulated genes with a minimum fold change. Specifically, the function calculates the global false discovery rate (FDR) among genes with the absolute largest t-statistics, assuming  a given proportion \Rfunarg{p0} of non-differentially expressed (nonDE) genes, and a given effect size \Rfunarg{D} for the differentially expressed (DE)genes:    
+<<>>=
+ss1 = samplesize(p0=0.95, D=1, crit=0.01)
+@
+In the example above, we assume that 95\% of all genes are nonDE, and that the 5\% DE genes have a log2-fold change of \Rfunarg{D}$=\pm 1$ (i.e. a fold change of 0.5 and 2, respectively); this produces the following result:
+<<>>=
+ss1
+@
+The listed FDRs are for the genes with 1\% largest t-statistics (or equivalently, the 1\% smallest p-values). We find that for $n=5$ microarray chips per group, these genes have a FDR of 64\%, meaning that roughly 2/3 of the top genes can be expected to be false positives; if we invest however in $n=5$ microarray chips per group, less than 2\% of the top genes will be false positives. 
+
+As a a side effect, \Rfunction{samplesize} produces a plot of the FDR as a function of the number of chips per group, as shown in Figure~\ref{fig:ss}. It shows that there is little to gain by increasing group sizes beyond $n=20$.
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+samplesize(p0=0.95, D=1, crit=0.01)
+@
+\caption{FDR as a function of samplesize, assuming that genes with 1\% absolutely largest t-statistics are declared DE.\label{fig:ss}}
+\end{center}
+\end{figure}
+
+\subsection{\Rfunction{TOC}}
+
+This function calculates the theoretical operating characteristics of a chosen design; for a given group size, proportion of regulated genes and minimum fold changes, the function shows the trade off between FDR and sensitivity for any possible threshold on the t-statistics.
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+TOC(n=20, p0=0.95, D=1, alpha=FALSE, legend=TRUE)
+@
+\caption{FDR and sensitivity as a function of the threshold for declaring a gene to be DE\label{fig:toc}}
+\end{center}
+\end{figure}
+
+\section{Identifying DE genes}
+
+\Rpackage{OCplus} offers three different functions for identifying differentially expressed genes. All three are based on different variants of the false discovery rate: \Rfunction{EOC} computes the global false discovery rate (FDR) for each gene, \Rfunction{fdr1d} and \Rfunction{fdr2d} compute different variants of the local false discovery rate (fdr). Using the FDR is the conventional and most direct approach and works generally out of the box. The fdr approach is potentially more powerful, because it uses smoothing to combine information across genes, but it may require some experimentation to get the smoothing paramters right: \Rfunction{fdr1d} will often work with the default settings, but \Rfunction{fdr2d} will usually require some modifications (but is proportionally more powerful than \Rfunction{fdr1d}).
+
+We use (unrealistically simple, but convenient) simulated data in the following to demonstrate these approaches:
+<<>>=
+set.seed(123)
+simdat = MAsim(ng=10000, n=10, p0=0.95, D=1, sigma=1)
+dim(simdat)
+colnames(simdat)
+@
+\Robject{simdat} contains the simulated log-expression values for 10,000 genes and two groups of samples with 10 chips per group; the log-expression values are assumed normal and independent, with standard deviation one and mean zero for the 95\% non-DE expressed genes, and mean $\pm 1$ for the DE genes in the second group.
+
+\subsection{\Rfunction{EOC}}
+
+This function is the counterpart to \Rfunction{TOC} and returns the empirical operating characteristics: for each gene, the associated t-statistic, 
+p-value, FDR and sensitivity.
+<<>>=
+sim1 = EOC(simdat, colnames(simdat))
+sim1[1:5,]
+@
+Note that this function plots the operating characteristics by default, but this can be suppressed by setting the argument \Rfunarg{plot=FALSE}, and the output still has its own plotting method, see Figure~\ref{fig:sim1}.
+
+The genes with the smallest FDR can be extracted via \Rfunction{topDE}:
+<<>>=
+topDE(sim1, co=0.1)
+@
+
+The proportion of non-DE genes \Rfunarg{p0} is by default estimated from the data using a variant of Storey's method; the estimate can be extracted from the output:
+<<>>=
+p0(sim1)
+@
+\Rfunarg{p0} can also be specified explicitly in the function call, if an alternative estimate is availabale, see Section~\ref{sec:tmix}.
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+plot(sim1)
+@
+\caption{Estimated FDR and sensitivity for the simulated data\label{fig:sim1}}
+\end{center}
+\end{figure}
+
+\subsection{\Rfunction{fdr1d}}
+
+This function returns for each gene the test statistic and the local (univariate) fdr: 
+<<>>=
+sim2 = fdr1d(simdat, colnames(simdat), verb=FALSE)
+sim2[1:5,]
+@
+The \Rfunarg{verb=FALSE} here just stops the function from reporting the number of the current permutation, which creates too much output for a vignette. \Rfunction{fdr1d} does not plot automatically, but has its own plotting method, see Figure~\ref{fig:sim2}.
+
+The proportion of non-DE genes \Rfunarg{p0} is by default estimated from the data, using a variant of Efron's method. The estimate can again be extracted from the output via the function \Rfunction{p0}; it is also reported by the summary method:
+<<>>=
+summary(sim2)
+@
+Note that the value for \Rfunarg{p0} is very close to the estimate used in \Robject{sim1} above.
+
+The genes with fdr below a specified threshold can again be listed by 
+<<>>=
+topDE(sim2, co=0.1)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+plot(sim2)
+@
+\caption{Local fdr as a function of t-statistics for the simulated data; inner ticks on the horizontal axis indicate observed t-statistics.\label{fig:sim2}}
+\end{center}
+\end{figure}
+
+
+\subsection{\Rfunction{fdr2d}}
+
+This function reports for each the test statistic, the auxiliary test statistic (generally the log of the standard error) and the local fdr based on the two test statistics: 
+<<>>=
+sim3 = fdr2d(simdat, colnames(simdat), p0=p0(sim2), verb=FALSE)
+sim3[1:5,]
+@
+Note that here the proportion \Rfunarg{p0} is specified explicitly -- we take the estimate based on the univariate densities used for \Robject{sim2}. The default behavior for \Rfunction{fdr2d} is also to estimate \Rfunarg{p0} from the data, but the results can be highly erratic, and we recommend using an external estimate, either from \Rfunction{EOC} or \Rfunction{fdr1d} as above, or from \Rfunction{tMixture}, as described in Section~\ref{sec:tmix}.
+
+As mentioned above, the smoothing parameter \Rfunarg{smooth} of \Rfunction{fdr2d} will often require adjustment. A useful graphical diagnostic for a suitable value of \Rfunarg{smooth} is shown in Figure~\ref{fig:sim3b}: in theory, the onedimensional fdr is equal to the twodimensional fdr averaged across the log standard errors; in Figure~\ref{fig:sim3b}, the solid line shows the onedimensional fdr (\Robject{sim2}) and the broken line shows the averaged twodimensional fdr; the agreement between the two lines is good, though better for low fdr (in the tail) than for high fdr (in the center). In practice, it is quite hard to achieve perfect agreement throughout, as different degrees of smoothing might be required in the center compared to the tails. We are, however, generally only interested in the genes with low fdr anyway, so it is usually sufficient to achieve a good fit in the tails.
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+plot(sim2)
+lines(average.fdr(sim3), lty=2)
+@
+\caption{Local onedimensional fdr as a function of the t-statistic (solid line, as in Figure~\ref{fig:sim2}) and averaged twodimensional fdr (broken line). \label{fig:sim3b}}
+\end{center}
+\end{figure}
+
+The results can be summarized as above, and the top list extracted with the same method as for \Rfunction{fdr1d}:
+<<>>=
+summary(sim3)
+topDE(sim3, co=0.1)
+@
+Note that the table of fdrs (\Robject{\$fdr}) in this output contains fdrs greater than one; this, too, is a consequence of not quite correct smoothing for genes with large fdr.
+
+Figure~\ref{fig:sim3} shows the standard plot for output from \Rfunction{fdr2d}. This is basically a scatterplot of the two contributing statistics, with the estimated fdr overlayed as isolines. Note that the averaged values shown as a broken line in Figure~\ref{fig:sim3b} are calculated by averaging along the vertical axis (the log standard errors) in Figure~\ref{fig:sim3}. 
+\begin{figure}
+\begin{center}
+<<fig=TRUE, echo=TRUE, results=hide>>=
+plot(sim3)
+@
+\caption{A scatterplot of the log standard errors vs. the t-statistics, with the estimated fdr indicated by isolines.\label{fig:sim3}}
+\end{center}
+\end{figure}
+
+
+\subsection{Compare performances}
+
+We have now three different analyses for the simulated data, one in terms of FDR and two in terms of fdr. The summary functions indicate that \Rfunction{fdr2d} seems to find the most regulated genes, but this is misleading, as FDR and fdr cannot be compared directly. The function \Rfunction{OCshow} compares the output from multiple analyses graphically, in terms of FDR, by averaging across fdrs. The result in Figure~\ref{fig:comp} shows the resulting FDR if we choose the declare the proportion of genes with the smallest FDR/fdr shown on the horizontal axis to be DE. In this case, the original FDR as provided by \Rfunction{EOC} and the FDR based on \Rfunction{fdr1d} are comparable, but the FDR based on \Rfunction{fdr2d} is clearly lower.
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE, results=hide>>=
+OCshow(sim1, sim2, sim3, legend=c("FDR","fdr1d","fdr2d"))
+@
+\caption{Vertical axis shows the resulting (global) FDR if we declare for each method the proportion of genes with the smallest FDR/fdr shown on the horizontal axis to be differentially expressed.\label{fig:comp}}
+\end{center}
+\end{figure}
+
+
+\section{Estimating the proportion of non-DE genes}\label{sec:tmix}
+
+An alternative method for estimating the proportion of non-DE expressed genes in a data set is based on fitting a mixture t-distributions to the vector of observed t-statistics, see \cite{Pawitan05b}. In the simplest case, we just compute the t-statistics and specify the number \Rfunarg{nq} of mixture components in the call to \Rfunction{tMixture}: 
+<<>>=
+tt = tstatistics(simdat, colnames(simdat))
+tt[1:10,] 
+tm = tMixture(tt, nq=3)
+@
+In this case, we assume three components, corresponding to down-, up-, and non-regulated genes, and the mixture proportion of the non-regulated genes is the desired estimate:
+<<>>=
+tm$p0.est
+@
+The estimate is a bit low compared to what we know is true ($p_0=0.95$). This is due to the fact that the numerical optimization used by this routine is fairly sensitive to the choice of starting values; it is therefore good practice to vary the starting values for different parameters:
+<<>>=
+tMixture(tt, nq=3, p0=0.80)$p0.est
+tMixture(tt, nq=3, p0=0.60)$p0.est
+@
+This is essentially the true value for both starting values. 
+
+Note that the specification of too many components can lead to spurious mixture components that cannot be distinguished reliably from the non-regulated genes. In order to get reasonable estimates, these components with small non-centrality parameter \Rfunarg{delta} are combined with the non-regulated component (which has by definition \Rfunarg{delta=0}). E.g.:
+<<>>=
+tm2 = tMixture(tt, nq=5)
+tm2$p0.est
+tm2$p0.raw
+@
+The estimated proportion \Robject{p0.est} is the same as with three components, but it is really the sum of \Robject{p0.raw} and the component with non-centrality parameter absolutely smaller than a critical value (0.75 by default):
+<<>>=
+tm2$p1
+tm2$delta
+@
+
+\bibliographystyle{plainnat}
+\bibliography{OCplus}
+\nocite{Ploner05c, Pawitan05a, Pawitan05b}
+
+\end{document}

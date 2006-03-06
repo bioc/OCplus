@@ -1,0 +1,14 @@
+Package: OCplus
+Title: Operating characteristics plus sample size and local fdr for microarray experiments
+Version: 1.5.0
+Author: Yudi Pawitan <Yudi.Pawitan@ki.se> and
+	Alexander Ploner <Alexander.Ploner@ki.se> 
+Description: This package allows to characterize the operating characeristics of
+	a microarray experiment, i.e. the trade-off between false discovery rate and
+	the power to detect truly regulated genes. The package includes tools both
+	for planned experiments (for sample size assessment) and for already
+	collected data (identification of differentially expressed genes).
+Depends: R (>= 2.1.0), akima, multtest (>= 1.7.3)
+Maintainer: Alexander Ploner <Alexander.Ploner@ki.se>
+biocViews: Microarray, Statistics, DifferentialExpression, MultipleComparisons 
+License: LGPL
