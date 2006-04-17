@@ -45,7 +45,7 @@ Efron B, Tibshirani R, Storey JD, Tusher V. (2001) Empirical Bayes Analysis of a
 }
 \author{Y. Pawitan and A. Ploner}
 \note{Both the curve labels and the legend may be squashed if the plotting device is too small. Increasing the size of the device and re-plotting should improve readability.}
-\seealso{\code{\link{plot.FDR.result}}, \code{\link{OCshow}}, \code{\link{mt.teststat}}}
+\seealso{\code{\link{plot.FDR.result}}, \code{\link{OCshow}}, \code{\link[multtest]{mt.teststat}}}
 \examples{
 # We simulate a small example with 5 percent regulated genes and
 # a rather large effect size
