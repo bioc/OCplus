@@ -40,9 +40,10 @@ Note that the model does \emph{not} assume that all genes have the same standard
 
 The default null distribution of the log2 expression values is a single normal distribution with mean zero (and standard deviation \code{sigma}); the default alternative distribution is is an equal mixture of two normals with means   \code{D} and -\code{D} (and again standard deviation \code{sigma}). However, general mixtures of normals can be specified for both null and alternative distribution through \code{F0} and \code{F1}, respectively: both are lists with two elements:
 
-\item \code{D} is the vector of means (i.e. log2 fold changes),
-\item \code{p} is the vector of mixing proportions for the means.
-
+\itemize{
+  \item \code{D} is the vector of means (i.e. log2 fold changes),
+  \item \code{p} is the vector of mixing proportions for the means.
+}
 If present, \code{p} must be the same length as \code{D}; its elements do not 
 need to be normalized, i.e. sum to one; if absent, equal mixing is assumed, see Examples. A wide (mixture) null hypothesis, or an empirical null hypothesis as outlined by Efron (2004), can be used if genes with log fold changes close to zero are thought to be of no biological interest, and  are counted as effectively not regulated. Similarly, the alternative hypothesis can be any mixture of large and small effects, symmetric or non-symmetric, depending on the expected regulation patterns, see Examples.
 

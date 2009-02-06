@@ -42,7 +42,7 @@ The plot format is basically a scatter plot of the observed test statistics, ove
 By default, the estimated fdr isolines are smoothed and cropped to the convex hull of the observed test statistics by using \pkg{akima}. This is entirely a graphical pre-processing step which produces smoother isolines and enforces sanity at the edges of the observed distribution; it does not change the estimated fdr at all. This graphical smoothing is controlled via the argument \code{nr.plot}, which specifies the grid size, with lower values resulting in stronger smoothing. In order to suppress graphical smoothing, set \code{nr.plot} to zero.
 
 Note that the test statistics and the fdr for the volcano- and tornado plots are not computed from scratch, but rather through transformation of the original results. Specifically, the isolines in these plots are also transformed; this has the unfortunate side effect that the labelling of isolines in these plots is not nearly as pretty as the standard provided by \code{contour}. This  functionality is currently not available outside of \code{contour}, and our implementation in \code{DrawContourlines} frankly leaves a lot to be desired. We apologize for the inconvenience.}    
-}
+
 \value{
 The original \code{x}, invisibly.
 }
