@@ -1,0 +1,15 @@
+importFrom(graphics, abline, contour, hist, legend, lines, par, plot,
+           points, segments, text, title)
+importFrom(grDevices, contourLines)
+importFrom(multtest, mt.teststat)
+importFrom(stats, approx, dt, optim, pt, rchisq, rexp, rnorm, rt,
+           runif, sd, uniroot)
+
+export(approx2d, average.fdr, brk2mid, CDF, CDF.paired, CDFmix, CDFmix.paired,
+       df2var, dgfree, dmt, dmt.paired, dmtmix, dmtmix.paired, DoConstrain,
+       DrawContourlines, EOC, FDR, FDR.paired, fdr1d, fdr2d, FDRp, gausei,
+       lfdr, lfdr.paired, MAsim, MAsim.real, MAsim.smyth, MAsim.var, MidBreaks,
+       MidBreaks.t, OCshow, p0, PermNull, plot.FDR.result, plot.fdr1d.result,
+       plot.fdr2d.result, Rinv, rmatrix, samplesize, smooth1d, smooth2d.basic,
+       smooth2d.direct, summary.fdr.result, tMixture, TOC, topDE, Tornadoplot,
+       tstatistics, Volcanoplot)

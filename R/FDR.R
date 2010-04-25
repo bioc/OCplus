@@ -16,7 +16,6 @@ FDRp = function(xdat, grp, test="t.equalvar", p0, nperm, seed=NULL)
 {
     n = length(grp)
     
-    require(multtest)
     tstat = mt.teststat(xdat, grp, test=test)
     n = length(tstat)
     ord.abs = order(abs(tstat))   # !!! take absolute value for symmetry

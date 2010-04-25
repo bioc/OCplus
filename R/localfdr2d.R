@@ -231,7 +231,6 @@ plot.fdr2d.result = function(x, levels, nr.plot=20, add=FALSE, grid=FALSE,
         cfdr$y = brk2mid(p$ybreaks)
         cfdr$z = p$fdr
     } else {
-        require(akima)
         # Actually, not using MidBreaks.t and MidBreaks seems to please more
         xo = seq(min(x[,1]), max(x[,1]), len=nr.plot)
         yo = seq(min(x[,2]), max(x[,2]), len=nr.plot)
@@ -292,7 +291,6 @@ Tornadoplot = function(x, levels, nr.plot=20, label=FALSE, constrain=FALSE, pch=
         cfdr$y = brk2mid(p$ybreaks)
         cfdr$z = p$fdr
     } else {
-        require(akima)
         # Actually, not using MidBreaks.t and MidBreaks seems to please more
         xo = seq(min(x[,1]), max(x[,1]), len=nr.plot)
         yo = seq(min(x[,2]), max(x[,2]), len=nr.plot)
@@ -356,7 +354,6 @@ Volcanoplot = function(x, df, levels, nr.plot=20, label=FALSE, constrain=FALSE,
         cfdr$y = brk2mid(p$ybreaks)
         cfdr$z = p$fdr
     } else {
-        require(akima)
         # Actually, not using MidBreaks.t and MidBreaks seems to please more
         xo = seq(min(x[,1]), max(x[,1]), len=nr.plot)
         yo = seq(min(x[,2]), max(x[,2]), len=nr.plot)
