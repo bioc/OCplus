@@ -1,6 +1,6 @@
 Package: OCplus
 Title: Operating characteristics plus sample size and local fdr for microarray experiments
-Version: 1.33.0
+Version: 1.34.0
 Author: Yudi Pawitan <Yudi.Pawitan@ki.se> and
 	Alexander Ploner <Alexander.Ploner@ki.se> 
 Description: This package allows to characterize the operating characteristics
