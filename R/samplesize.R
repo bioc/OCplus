@@ -122,7 +122,7 @@
             }
         }    
         # This establishes the limits for the interval where to search for the root
-        yy   = max(n)
+        yy   = min(n)
         cc   = min(crit)
         from = 0
         if (qFmix(from) <= 0) {
