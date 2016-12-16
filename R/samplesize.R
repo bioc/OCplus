@@ -121,20 +121,13 @@
                 lq + uq - cc
             }
         }    
-        # This establishes the limits for the interval where to search for the root
-        yy   = min(n)
-        cc   = min(crit)
+        # These are the default limits for the interval where to search for the root
+        # These settings are entirely heuristical in that they work as-is
+        # for the current set of examples(samplesize)
+        # We rely on the "extendInt"-argument to uniroot() to adjust for
+        # situations where the limit needs to be extended (upwards)
         from = 0
-        if (qFmix(from) <= 0) {
-            stop("Weird distribution, can't run uniroot from 0")
-        }
-        to = 6
-        while ((qFmix(to) > 0) & (to < 100)) {
-            to = to + 3
-        }
-        if (to > 100) {
-            stop("Weird distribution, can't run uniroot until", to)
-        }
+        to   = 15
         # Do it
         crit.ret  = matrix(0, nrow=retnum, ncol=critnum)
         crit.plot = matrix(0, nrow=nplot, ncol=critnum)
@@ -142,11 +135,17 @@
             cc = crit[i]
             for (j in 1:retnum) {
                 yy = n[j]
-                crit.ret[j,i] = uniroot(qFmix, c(from, to))$root
+				if (qFmix(from) <= 0) {
+					stop("Weird distribution, can't run uniroot from 0")
+				}
+                crit.ret[j,i] = uniroot(qFmix, c(from, to), extendInt="downX")$root
             }
             for (j in 1:nplot) {
                 yy = nn[j]
-                crit.plot[j,i] = uniroot(qFmix, c(from, to))$root
+				if (qFmix(from) <= 0) {
+					stop("Weird distribution, can't run uniroot from 0")
+				}
+                crit.plot[j,i] = uniroot(qFmix, c(from, to), extendInt="downX")$root
             }
         }
     }
