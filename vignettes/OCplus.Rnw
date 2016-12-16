@@ -21,7 +21,7 @@
 %% End Sweave.sty
 
 %% The options
-\SweaveOpts{eps=FALSE, prefix.string=pix/OCplus} 
+\SweaveOpts{eps=FALSE, prefix.string=OCplus} 
 
 \newcommand{\Robject}[1]{{\texttt{#1}}}
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
