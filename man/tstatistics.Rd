@@ -35,7 +35,5 @@ If the argument \code{seed} is specified, \code{PermNull} adds an attribute of t
 }
 \author{A. Ploner}
 \seealso{\code{\link{fdr1d}}, \code{\link{fdr2d}}, examples in \code{\link{tMixture}}}
-\examples{
-}
 \keyword{univar}% at least one, from doc/KEYWORDS
 \keyword{utilities} % __ONLY ONE__ keyword per line

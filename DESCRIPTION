@@ -1,7 +1,7 @@
 Package: OCplus
 Title: Operating characteristics plus sample size and local fdr for
         microarray experiments
-Version: 1.49.2
+Version: 1.49.3
 Author: Yudi Pawitan <Yudi.Pawitan@ki.se> and Alexander Ploner
         <Alexander.Ploner@ki.se>
 Description: This package allows to characterize the operating
@@ -11,8 +11,8 @@ Description: This package allows to characterize the operating
         experiments (for sample size assessment) and for already
         collected data (identification of differentially expressed
         genes).
-Depends: R (>= 2.1.0), akima
-Imports: multtest (>= 1.7.3), graphics, grDevices, stats
+Depends: R (>= 2.1.0)
+Imports: multtest (>= 1.7.3), graphics, grDevices, stats, akima
 Maintainer: Alexander Ploner <Alexander.Ploner@ki.se>
 License: LGPL
 biocViews: Microarray, DifferentialExpression, MultipleComparison

@@ -4,8 +4,7 @@
 \description{
 A plotting function for \code{fdr1d}.
 }
-\usage{
-plot.fdr1d.result(x, add = FALSE, grid = FALSE, rug = TRUE, 
+\usage{\method{plot}{fdr1d.result}(x, add = FALSE, grid = FALSE, rug = TRUE, 
                   xlab = "t-Statistic", ylab = "fdr", lcol = "black", ...)
 }
 %- maybe also 'usage' for other objects documented here.

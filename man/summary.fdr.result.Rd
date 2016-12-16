@@ -8,7 +8,7 @@
 Display functions for output from \code{fdr1d} and \code{fdr2d}, summarizing the output, displaying the proportion of non-differentially expressed genes and extracting the list of top-regulated genes. 
 }
 \usage{
-summary.fdr.result(object, ...)
+\method{summary}{fdr.result}(object, ...)
 
 p0(x, how = FALSE)
 

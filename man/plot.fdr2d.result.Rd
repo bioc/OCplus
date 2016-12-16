@@ -8,7 +8,7 @@
 These functions provide different ways of plotting the output \code{fdr2d}.
 }
 \usage{
-plot.fdr2d.result(x, levels, nr.plot = 20, add = FALSE, grid = FALSE, 
+\method{plot}{fdr2d.result}(x, levels, nr.plot = 20, add = FALSE, grid = FALSE, 
   pch = ".",xlab, ylab, vfont = c("sans serif", "plain"), lcol = "black", ...)
 
 Tornadoplot(x, levels, nr.plot = 20, label = FALSE, constrain = FALSE, 

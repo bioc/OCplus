@@ -5,7 +5,7 @@
 Plots the output from \code{EOC}. The resulting graph is the empirical counterpart to those produced by \code{TOC}, i.e. the estimated FDR as a function of the cutoff-level on the t-statistic.
 }
 \usage{
-plot.FDR.result(x, add=FALSE, sensitivity.show = TRUE, legend.show = FALSE, 
+\method{plot}{FDR.result}(x, add=FALSE, sensitivity.show = TRUE, legend.show = FALSE, 
      xlim, ylim = c(0, 1), xlab, ylab, main, ...)
 }
 %- maybe also 'usage' for other objects documented here.
