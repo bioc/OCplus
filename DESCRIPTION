@@ -12,7 +12,7 @@ Description: This package allows to characterize the operating
         collected data (identification of differentially expressed
         genes).
 Depends: R (>= 2.1.0)
-Imports: multtest (>= 1.7.3), graphics, grDevices, stats, akima
+Imports: multtest (>= 1.7.3), graphics, grDevices, stats, interp
 Maintainer: Alexander Ploner <Alexander.Ploner@ki.se>
 License: LGPL
 biocViews: Microarray, DifferentialExpression, MultipleComparison

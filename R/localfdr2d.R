@@ -197,6 +197,7 @@ approx2d = function(x,y, z, xout, yout, ...)
 ##---------------------- Plot a 2D fdr result ------------------------------##
 ## 220605
 ## 180805 added akima
+## 221012 replaced akima with interp
 
 
 plot.fdr2d.result = function(x, levels, nr.plot=20, add=FALSE, grid=FALSE,  
@@ -205,7 +206,7 @@ plot.fdr2d.result = function(x, levels, nr.plot=20, add=FALSE, grid=FALSE,
 #
 # Name: plot.fdr2d.result
 # Desc: a S3 plotting method for fdr2d results
-# Uses: akima for pretty smoothing
+# Uses: interp for pretty smoothing
 # Auth: Alexander.Ploner@meb.ki.se 180805
 #
 # Chng:
