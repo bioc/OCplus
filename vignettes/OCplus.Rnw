@@ -1,7 +1,7 @@
 \documentclass[10pt]{article}
 
 %\VignetteIndexEntry{OCplus Introduction}
-%\VignetteDepends{akima, multtest}
+%\VignetteDepends{interp, multtest}
 %\VignetteKeywords{microarray, differential expression, false discovery rate}
 %\VignettePackage{OCplus}
 
@@ -61,7 +61,7 @@ This short introduction explains the underlying model and demonstrates the main 
 
 \section{Installation}
 
-You need the package \Rpackage{akima}, available from CRAN. In order to run \Rfunction{EOC}, you also need the package \Rpackage{multtest} from Bioconductor.
+You need the package \Rpackage{interp}, available from CRAN. In order to run \Rfunction{EOC}, you also need the package \Rpackage{multtest} from Bioconductor.
 <<>>=
 library(OCplus)
 @
